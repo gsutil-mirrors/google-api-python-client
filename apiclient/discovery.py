@@ -25,10 +25,19 @@ import httplib2
 import logging
 import os
 import re
-import simplejson
 import uritemplate
 import urllib
 import urlparse
+
+try:
+  import simplejson
+except ImportError:
+  try:
+    # Try to import from django, should work on App Engine
+    from django.utils import simplejson
+  except ImportError:
+    # Should work for Python2.6 and higher.
+    import json as simplejson
 
 
 class HttpError(Exception):
@@ -68,7 +77,7 @@ class JsonModel(object):
       headers['user-agent'] += ' '
     else:
       headers['user-agent'] = ''
-    headers['user-agent'] += 'google-api-client-python/1.0'
+    headers['user-agent'] += 'google-api-python-client/1.0'
     if body_value is None:
       return (headers, path_params, query, None)
     else:
