@@ -31,8 +31,9 @@ elif verbosity == 2:
 def build_suite(folder):
   # find all of the test modules
   modules = map(fullmodname, glob.glob(os.path.join(folder, 'test_*.py')))
-  print "Running the tests found in the following modules:"
-  print modules
+  if verbosity > 0:
+    print "Running the tests found in the following modules:"
+    print modules
 
   # load all of the tests into a suite
   try:
@@ -43,10 +44,12 @@ def build_suite(folder):
           __import__(module)
       raise
 
+# build and run unit test suite
 unit_tests = build_suite('tests')
-functional_tests = build_suite('functional_tests')
-
-# run test suites
 unittest.TextTestRunner(verbosity=verbosity).run(unit_tests)
+cleanup()
+
+# build and run functional test suite
+functional_tests = build_suite('functional_tests')
 unittest.TextTestRunner(verbosity=verbosity).run(functional_tests)
 cleanup()
